@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import styled from '@emotion/styled';
 import { storeVideo } from '../services/livepeer';
 import { createEdition } from '../services/zora';
-import { ethers } from 'ethers';
+import { storeImage } from '../services/web3-storage';
 
 // Components
 import Layout from '../components/layouts/Layout';
@@ -134,7 +134,7 @@ const InputFile = styled.div`
 
     img {
         max-width: 4rem;
-        max-height: 4rem;
+        aspect-ratio: 1 / 1;
     }
 `;
 
@@ -149,14 +149,16 @@ const InfoContainer = styled.div`
 
 const NewNFT = () => {
     // UseRef
-    const inputFileRef = useRef();
+    const inputVideoRef = useRef();
+    const inputImageRef = useRef();
 
     // States
     const [NFT, setNFT] = useState({
         name: '',
         symbol: '',
         description: '',
-        file: null,
+        video: null,
+        image: null,
         price: '',
         size: '0',
         edition: '',
@@ -167,7 +169,7 @@ const NewNFT = () => {
     });
 
     // Destructuring
-    const { name, symbol, description, file, price, size, edition, start, end, royalty, payout } = NFT;
+    const { name, symbol, description, video, image, price, size, edition, start, end, royalty, payout } = NFT;
 
     const handleSubmit = async e => {
         try {
@@ -180,7 +182,9 @@ const NewNFT = () => {
 
             console.log('Loading');
 
-            const response = await storeVideo(NFT.file, NFT.description);
+            const [videoResponse, imageCid] = await Promise.all([storeVideo(video, description), storeImage(image)]);
+
+            const imageURL = `https://ipfs.io/ipfs/${imageCid}/cover-image.jpeg`;
 
             const startTime = start ? Math.floor(new Date(start).getTime() / 1000) : 0;
             const endTime = end ? Math.floor(new Date(end).getTime() / 1000) : 0;
@@ -195,8 +199,8 @@ const NewNFT = () => {
                 endTime,
                 royalty,
                 payout,
-                response.videoFileGatewayUrl,
-                response.videoFileGatewayUrl
+                videoResponse.videoFileGatewayUrl,
+                imageURL
             );
         } catch (error) {
             console.log(error);
@@ -204,7 +208,7 @@ const NewNFT = () => {
     };
 
     const checkFields = () => {
-        return name && symbol && description && file && price && size && edition && royalty && payout;
+        return name && symbol && description && video && image && price && size && edition && royalty && payout;
     };
 
     const handleChange = e => {
@@ -225,7 +229,7 @@ const NewNFT = () => {
         try {
             setNFT({
                 ...NFT,
-                file: e.target.files[0],
+                [e.target.name]: e.target.files[0],
             });
         } catch (error) {
             console.log(error);
@@ -241,7 +245,7 @@ const NewNFT = () => {
                     <Form onSubmit={handleSubmit}>
                         <Field>
                             <label htmlFor='name'>Name</label>
-                            <input id='name' name='name' type='text' value={NFT.name} onChange={handleChange} />
+                            <input id='name' name='name' type='text' value={name} onChange={handleChange} />
                         </Field>
 
                         <Field>
@@ -250,48 +254,57 @@ const NewNFT = () => {
                                 id='symbol'
                                 name='symbol'
                                 type='text'
-                                value={`$${NFT.symbol}`}
+                                value={`$${symbol}`}
                                 onChange={handleChangeSymbol}
                             />
                         </Field>
 
                         <Field>
                             <label htmlFor='description'>Description</label>
-                            <textarea
-                                id='description'
-                                name='description'
-                                value={NFT.description}
-                                onChange={handleChange}
-                            />
+                            <textarea id='description' name='description' value={description} onChange={handleChange} />
                         </Field>
 
                         <Field>
-                            <label htmlFor='file'>File</label>
+                            <label htmlFor='video'>Video</label>
                             <input
-                                ref={inputFileRef}
-                                id='file'
-                                name='file'
+                                ref={inputVideoRef}
+                                id='video'
+                                name='video'
                                 type='file'
                                 accept='video/mp4'
                                 onChange={handleChangeFile}
                                 style={{ display: 'none' }}
                             />
-                            <InputFile onClick={() => inputFileRef.current.click()}>
-                                <p>{NFT.file ? NFT.file.name : 'None selected'}</p>
-                                <p>{NFT.file ? 'Replace' : 'Upload'}</p>
+                            <InputFile onClick={() => inputVideoRef.current.click()}>
+                                <p>{video ? video.name : 'None selected'}</p>
+                                <p>{video ? 'Replace' : 'Upload'}</p>
+                            </InputFile>
+                        </Field>
+
+                        <Field>
+                            <label htmlFor='image'>Cover</label>
+                            <input
+                                ref={inputImageRef}
+                                id='image'
+                                name='image'
+                                type='file'
+                                accept='image/jpg'
+                                onChange={handleChangeFile}
+                                style={{ display: 'none' }}
+                            />
+                            <InputFile onClick={() => inputImageRef.current.click()}>
+                                <div>
+                                    {image && <img src={URL.createObjectURL(image)} alt='Cover' />}
+                                    <p>{image ? image.name : 'None selected'}</p>
+                                </div>
+                                <p>{image ? 'Replace' : 'Upload'}</p>
                             </InputFile>
                         </Field>
 
                         <Field>
                             <label htmlFor='price'>Price</label>
                             <InputContainer>
-                                <input
-                                    id='price'
-                                    name='price'
-                                    type='number'
-                                    value={NFT.price}
-                                    onChange={handleChange}
-                                />
+                                <input id='price' name='price' type='number' value={price} onChange={handleChange} />
                                 <p>ETH</p>
                             </InputContainer>
                         </Field>
@@ -302,20 +315,20 @@ const NewNFT = () => {
                                 <select
                                     id='size'
                                     name='size'
-                                    value={NFT.size}
+                                    value={size}
                                     onChange={handleChange}
                                     style={{ flex: '0 0 130px' }}
                                 >
                                     <option value='0'>Fixed</option>
                                     <option value='1'>Open edition</option>
                                 </select>
-                                <InputContainer style={{ flex: '1' }} disabled={NFT.size === '1'}>
+                                <InputContainer style={{ flex: '1' }} disabled={size === '1'}>
                                     <input
                                         id='edition'
                                         name='edition'
                                         type='number'
-                                        value={NFT.edition}
-                                        disabled={NFT.size === '1'}
+                                        value={edition}
+                                        disabled={size === '1'}
                                         onChange={handleChange}
                                     />
                                     <p>editions</p>
@@ -328,9 +341,9 @@ const NewNFT = () => {
                                 Start & end time <span>Optional</span>
                             </label>
                             <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                                <input id='start' name='start' type='date' value={NFT.start} onChange={handleChange} />
+                                <input id='start' name='start' type='date' value={start} onChange={handleChange} />
                                 <p style={{ fontSize: '1.8rem' }}>&rArr;</p>
-                                <input id='end' name='end' type='date' value={NFT.end} onChange={handleChange} />
+                                <input id='end' name='end' type='date' value={end} onChange={handleChange} />
                             </div>
                         </Field>
 
@@ -341,7 +354,7 @@ const NewNFT = () => {
                                     id='royalty'
                                     name='royalty'
                                     type='number'
-                                    value={NFT.royalty}
+                                    value={royalty}
                                     onChange={handleChange}
                                 />
                                 <p>%</p>
@@ -350,7 +363,7 @@ const NewNFT = () => {
 
                         <Field>
                             <label htmlFor='payout'>Payout address</label>
-                            <input id='payout' name='payout' type='text' value={NFT.payout} onChange={handleChange} />
+                            <input id='payout' name='payout' type='text' value={payout} onChange={handleChange} />
                             <p style={{ fontSize: '1.2rem' }}>
                                 The address that will receive any withdrawals and royalties. It can be your personal
                                 wallet, a multisignature wallet, or an external splits contract.
@@ -369,9 +382,9 @@ const NewNFT = () => {
                             minBlockSize: '30rem',
                         }}
                     >
-                        {NFT.file ? (
+                        {video ? (
                             <video width='100%' autoPlay controls>
-                                <source src={URL.createObjectURL(NFT.file)} type='video/mp4' />
+                                <source src={URL.createObjectURL(video)} type='video/mp4' />
                                 Your browser does not support the video tag.
                             </video>
                         ) : (
@@ -389,7 +402,7 @@ const NewNFT = () => {
                             letterSpacing: '.05em',
                         }}
                     >
-                        <p style={{ fontSize: '3.5rem' }}>{NFT.name || 'Name'}</p>
+                        <p style={{ fontSize: '3.5rem' }}>{name || 'Name'}</p>
                         <p style={{ marginTop: '2rem' }}>
                             <span
                                 style={{
@@ -398,21 +411,21 @@ const NewNFT = () => {
                                     padding: '.2rem .5rem',
                                 }}
                             >
-                                ${NFT.symbol}
+                                ${symbol}
                             </span>{' '}
                             EDITION
                         </p>
-                        <p style={{ marginTop: '1rem' }}>{NFT.description || 'Description'}</p>
+                        <p style={{ marginTop: '1rem' }}>{description || 'Description'}</p>
 
                         <div style={{ display: 'flex', gap: '2rem', marginTop: '1rem' }}>
                             <div>
                                 <p>EDITION PRICE</p>
-                                <p style={{ fontSize: '3.5rem' }}>{NFT.price} ETH</p>
+                                <p style={{ fontSize: '3.5rem' }}>{price} ETH</p>
                             </div>
 
                             <div>
                                 <p>TOTAL SUPPLY</p>
-                                <p style={{ fontSize: '3.5rem' }}>{NFT.edition || 'OPEN'}</p>
+                                <p style={{ fontSize: '3.5rem' }}>{edition || 'OPEN'}</p>
                             </div>
                         </div>
                     </InfoContainer>

@@ -34,7 +34,6 @@ export async function createEdition(
         const signer = provider.getSigner();
         const contract = instanceContract(ZoraProxy_ADDRESS_RINKEBY, Contract.abi, signer);
 
-        console.log(start, end);
         const salesConfig = [
             ethers.utils.parseEther((price / 100).toString()),
             edition,
