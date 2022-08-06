@@ -171,14 +171,6 @@ const NewNFT = () => {
 
             e.preventDefault();
 
-            const obj = {
-
-            };
-
-            /** Aqui va tot el codi */
-
-            
-            
         } catch (error) {
             console.log(error);
         }

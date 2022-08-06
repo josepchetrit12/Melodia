@@ -2,6 +2,9 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 
+// Components
+import Wallet from '../ui/Wallet';
+
 // Styled
 const HeaderStyled = styled.header`
     border-bottom: 2px solid var(--gray2);
@@ -12,7 +15,7 @@ const HeaderContainer = styled.div`
     position: relative;
     width: 100%;
     margin: 0;
-    padding: 0 2rem;
+    padding: 0 3rem;
     margin: 0 auto;
 
     @media (min-width: 768px) {
@@ -50,7 +53,7 @@ const Header = () => {
                 </Link>
 
                 <DivFlexCenter>
-                    <p style={{ fontSize: '1.6rem' }}>MetaMask</p>
+                    <Wallet />
                 </DivFlexCenter>
             </HeaderContainer>
         </HeaderStyled>
