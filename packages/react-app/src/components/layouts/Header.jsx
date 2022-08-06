@@ -37,7 +37,7 @@ const DivFlexCenter = styled.div`
 
 const Title = styled.p`
     font-size: 2.6rem;
-    margin: 0 0 .6rem .3rem;
+    margin: 0 0 0.6rem 0.3rem;
     color: black;
 `;
 
@@ -58,6 +58,6 @@ const Header = () => {
             </HeaderContainer>
         </HeaderStyled>
     );
-}
- 
+};
+
 export default Header;
