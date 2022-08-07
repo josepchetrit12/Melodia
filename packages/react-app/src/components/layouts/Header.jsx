@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 
 // Components
 import Wallet from '../ui/Wallet';
+import { getCurrentAddress } from '../../utils/address';
 
 // Styled
 const HeaderStyled = styled.header`
@@ -41,7 +42,58 @@ const Title = styled.p`
     color: black;
 `;
 
+const Nav = styled.nav`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const NavItem = styled(Link)`
+    color: black;
+    text-decoration: none;
+    font-size: 2.2rem;
+    display: block;
+
+    @media (min-width: 768px) {
+        display: inline-block;
+        margin-right: 2rem;
+        font-size: 1.8rem;
+
+        &:last-of-type {
+            margin: 0;
+        }
+    }
+
+    &:hover {
+        color: black;
+    }
+`;
+
 const Header = () => {
+    
+    // States
+    const [address, setAddress] = useState('');
+
+    useEffect(() => {
+
+        if (!address) {
+            getAddress();
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const getAddress = async () => {
+
+        try {
+
+            setAddress(await getCurrentAddress());
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <HeaderStyled>
             <HeaderContainer>
@@ -51,6 +103,12 @@ const Header = () => {
                         <Title>Melodia</Title>
                     </DivFlexCenter>
                 </Link>
+
+                <Nav>
+                    <NavItem to='/'>Marketplace</NavItem>
+                    <NavItem to='/new-nft'>Create NFT</NavItem>
+                    <NavItem to={`/profile/${address}`}>Profile</NavItem>
+                </Nav>
 
                 <DivFlexCenter>
                     <Wallet />
