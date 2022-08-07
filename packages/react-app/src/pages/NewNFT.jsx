@@ -184,7 +184,7 @@ const NewNFT = () => {
 
             const [videoResponse, imageCid] = await Promise.all([storeVideo(video, description), storeImage(image)]);
 
-            const imageURL = `https://ipfs.io/ipfs/${imageCid}/cover-image.jpeg`;
+            const imageURL = `ipfs://${imageCid}`;
 
             const startTime = start ? Math.floor(new Date(start).getTime() / 1000) : 0;
             const endTime = end ? Math.floor(new Date(end).getTime() / 1000) : 0;
@@ -199,7 +199,7 @@ const NewNFT = () => {
                 endTime,
                 royalty,
                 payout,
-                videoResponse.videoFileGatewayUrl,
+                videoResponse.videoFileUrl,
                 imageURL
             );
         } catch (error) {
@@ -288,7 +288,7 @@ const NewNFT = () => {
                                 id='image'
                                 name='image'
                                 type='file'
-                                accept='image/jpg'
+                                accept='image/*'
                                 onChange={handleChangeFile}
                                 style={{ display: 'none' }}
                             />

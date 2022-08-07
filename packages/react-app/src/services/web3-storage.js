@@ -10,8 +10,8 @@ function makeStorageClient() {
 
 export async function storeImage(file) {
     const client = makeStorageClient();
-    const newFile = new File([file], 'cover-image.jpeg', { type: 'image' });
-    return client.put([newFile]);
+    const newFile = new File([file], `cover-image.${file.name.split('.')[1]}`, { type: 'image' });
+    return client.put([newFile], { wrapWithDirectory: false });
 }
 
 export async function retrieveFiles(cid) {
