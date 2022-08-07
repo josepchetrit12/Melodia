@@ -19,7 +19,7 @@ const Devider = styled.div`
     margin: .4rem 0;
 `;
 
-const Card = ({ token }) => {
+const TokenCard = ({ token }) => {
 
     const tokenInfo = FetchStaticData.getIndexerServerTokenInfo(token);
 
@@ -32,8 +32,12 @@ const Card = ({ token }) => {
             </Link>
 
             <div style={{ padding: '1rem', fontSize: '1.4rem', lineHeight: '1.2', fontWeight: '500' }}>
-                <p>{token.nft.tokenData.tokenContract.name} <span>#{tokenInfo.tokenId}</span></p>
-                <p>{getShortFormatAddress(token.nft.tokenData.owner)}</p>
+                <Link to={`/nft/${token.nft.tokenData.id}`} style={{ textDecoration: 'none', color: 'var(--black)' }}>
+                    <p>{token.nft.tokenData.tokenContract.name} <span>#{tokenInfo.tokenId}</span></p>
+                </Link>
+                <Link to={`/profile/${token.nft.tokenData.owner}`} style={{ textDecoration: 'none', color: 'var(--black)' }}>
+                    <p>{getShortFormatAddress(token.nft.tokenData.owner)}</p>
+                </Link>
                 <Devider />
                 <p><span>Price</span> 0 ETH</p>
             </div>
@@ -41,4 +45,4 @@ const Card = ({ token }) => {
     );
 }
  
-export default Card;
+export default TokenCard;

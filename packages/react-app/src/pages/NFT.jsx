@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { FetchStaticData, MediaFetchAgent } from "@zoralabs/nft-hooks";
 import styled from '@emotion/styled';
 
 // Components
 import Layout from '../components/layouts/Layout';
+import AddressContainer from '../components/ui/AddressContainer';
 
 // Utils
 import { getShortFormatAddress } from '../utils/address';
@@ -21,15 +22,6 @@ const MainInfo = styled.div`
     flex-direction: column;
     gap: 2rem;
     padding: 1rem 2rem;
-`;
-
-const OwnerAddressContainer = styled.div`
-    display: inline-block;
-    border: .2rem solid var(--gray3);
-    border-radius: 2rem;
-    padding: 1rem 2rem;
-    margin: 0 auto 0 0;
-    font-size: 1.6rem;
 `;
 
 const PriceInfo = styled.div`
@@ -94,6 +86,7 @@ const NFT = () => {
             getToken();
         }
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getToken = async () => {
@@ -139,9 +132,9 @@ const NFT = () => {
             <InfoContainer>
                 <div style={{ flex: 1 }}>
                     <MainInfo>
-                        <OwnerAddressContainer>
-                            <p>{getShortFormatAddress(token?.owner)}</p>
-                        </OwnerAddressContainer>
+                        <Link to={`/profile/${token?.owner}`} style={{ textDecoration: 'none', color: 'var(--black)'}}>
+                            <AddressContainer address={token?.owner} />
+                        </Link>
                         <h2 style={{ fontSize: '4rem', margin: '0' }}>{token?.name}</h2>
                         <p style={{ fontSize: '1.4rem', lineHeight: '1.6', fontWeight: '400' }}>{token?.description}</p>
                     </MainInfo>

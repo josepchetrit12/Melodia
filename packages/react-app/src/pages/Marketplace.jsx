@@ -1,21 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { FetchStaticData, MediaFetchAgent } from "@zoralabs/nft-hooks";
-import styled from '@emotion/styled';
 
 // Components
 import Layout from '../components/layouts/Layout';
-import Card from '../components/layouts/Card';
-
-// Styled
-const List = styled.div`
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-column-gap: 1rem;
-    grid-row-gap: 1rem;
-`;
+import TokenList from '../components/layouts/TokenList';
 
 const Marketplace = () => {
 
+    // States
     const [tokens, setTokens] = useState([]);
 
     useEffect(() => {
@@ -24,6 +16,7 @@ const Marketplace = () => {
             getTokens();
         }
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getTokens = async () => {
@@ -46,11 +39,7 @@ const Marketplace = () => {
 
     return (
         <Layout>
-            <List>
-                {tokens.map((token, idx) => (
-                    <Card key={idx} token={token} />
-                ))}
-            </List>
+            <TokenList tokens={tokens} />
         </Layout>
     );
 }
