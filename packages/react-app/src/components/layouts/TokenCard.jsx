@@ -15,7 +15,7 @@ const Container = styled.div`
 
 const Devider = styled.div`
     border-bottom: .1rem solid var(--gray2);
-    width: 80%;
+    width: 100%;
     margin: .4rem 0;
 `;
 
@@ -33,13 +33,13 @@ const TokenCard = ({ token }) => {
 
             <div style={{ padding: '1rem', fontSize: '1.4rem', lineHeight: '1.2', fontWeight: '500' }}>
                 <Link to={`/nft/${token.nft.tokenData.id}`} style={{ textDecoration: 'none', color: 'var(--black)' }}>
-                    <p>{token.nft.tokenData.tokenContract.name} <span>#{tokenInfo.tokenId}</span></p>
+                    <p style={{ marginBottom: '1rem' }}>{token.nft.tokenData.tokenContract.name} <span>#{tokenInfo.tokenId}</span></p>
                 </Link>
                 <Link to={`/profile/${token.nft.tokenData.owner}`} style={{ textDecoration: 'none', color: 'var(--black)' }}>
-                    <p>{getShortFormatAddress(token.nft.tokenData.owner)}</p>
+                    <p style={{ marginBottom: '1rem' }}>{getShortFormatAddress(token.nft.tokenData.owner)}</p>
                 </Link>
                 <Devider />
-                <p><span>Price</span> 0 ETH</p>
+                <p style={{ marginTop: '1rem' }}><span>Price</span> 0 ETH</p>
             </div>
         </Container>
     );

@@ -57,7 +57,9 @@ const Profile = () => {
     return (
         <Layout>
             <div style={{ marginBottom: '4rem' }}>
-                <AddressContainer address={id} />
+                <div style={{ textAlign: 'center' }}>
+                    <AddressContainer address={id} />
+                </div>
                 <Devider />
                 <TokenList tokens={tokens} />
             </div>
