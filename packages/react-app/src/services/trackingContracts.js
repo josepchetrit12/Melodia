@@ -22,10 +22,12 @@ function instanceContract(address, abi, signer) {
 // To add a new contract in the tracking List.
 export async function addNewContract(contract) {
     if (typeof window.ethereum !== 'undefined') {
+        await requestAccount();
         const provider = newProvider();
         const signer = provider.getSigner();
         const contract = instanceContract(MelodiaAddress, MelodiaTracking.abi, signer);
-        return contract.addNewContract(contract);
+        const tx = await contract.addNewContract(contract);
+        await tx.wait()
     }
 }
 
