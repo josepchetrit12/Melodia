@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import MelodiaTracking from '../contracts/MelodiaTracking.sol/MelodiaTracking.json';
 
-const MelodiaAddress = '0xe6d35daa7036786ac39081c4c05f0041669a616a';
+const MelodiaAddress = '0xa4273064da16E030B43e3f50b092950079cd80D7';
 
 async function requestAccount() {
     await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -20,27 +20,27 @@ function instanceContract(address, abi, signer) {
  */
 
 // To add a new contract in the tracking List.
-export async function addNewContract(contract) {
+export async function addNewContract(contractAddress) {
     if (typeof window.ethereum !== 'undefined') {
         await requestAccount();
         const provider = newProvider();
         const signer = provider.getSigner();
         const contract = instanceContract(MelodiaAddress, MelodiaTracking.abi, signer);
-        const tx = await contract.addNewContract(contract);
+        const tx = await contract.addNewContract(contractAddress);
         await tx.wait()
     }
 }
 
 /**
- * geAllContract Function
+ * getAllContracts Function
  */
 
 // To get all contract from the tracking List.
-export async function geAllContract() {
+export async function getAllContracts() {
     if (typeof window.ethereum !== 'undefined') {
         const provider = newProvider();
         const contract = instanceContract(MelodiaAddress, MelodiaTracking.abi, provider);
-        return contract.geAllContract();
+        return contract.getAllContracts();
     }
 }
 

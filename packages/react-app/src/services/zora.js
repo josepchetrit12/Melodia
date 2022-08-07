@@ -1,5 +1,6 @@
 import Contract from '@zoralabs/nft-drop-contracts/dist/artifacts/ZoraNFTCreatorV1.sol/ZoraNFTCreatorV1.json';
 import { ethers } from 'ethers';
+import { addNewContract } from './trackingContracts';
 
 const ZoraProxy_ADDRESS_RINKEBY = '0x2d2acD205bd6d9D0B3E79990e093768375AD3a30';
 
@@ -44,18 +45,40 @@ export async function createEdition(
             '0x0000000000000000000000000000000000000000000000000000000000000000',
         ];
 
+        await eventListenCreatedDrop();
+
+        const ownerAddress = await signer.getAddress();
+
         const tx = await contract.createEdition(
             name,
             symbol,
             edition,
             royalty * 100,
             payout,
-            signer.getAddress(),
+            ownerAddress,
             salesConfig,
             description,
             animationURI,
             imageURI
         );
         await tx.wait();
+    }
+}
+
+export async function eventListenCreatedDrop() {
+    if (typeof window.ethereum !== 'undefined') {
+        const provider = newProvider();
+        const signer = provider.getSigner();
+        
+        const ownerAddress = await signer.getAddress();
+
+        const contract = instanceContract(ZoraProxy_ADDRESS_RINKEBY, Contract.abi, provider);
+
+        contract.on('CreatedDrop', async (creator, dropAddress) => {
+            if (ownerAddress === creator) {
+                await addNewContract(dropAddress);
+                contract.off('CreatedDrop');
+            }
+        });
     }
 }

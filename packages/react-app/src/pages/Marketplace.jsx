@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FetchStaticData, MediaFetchAgent } from "@zoralabs/nft-hooks";
+import { getAllContracts } from '../services/trackingContracts';
 
 // Components
 import Layout from '../components/layouts/Layout';
@@ -24,8 +25,10 @@ const Marketplace = () => {
 
             const fetchAgent = new MediaFetchAgent(process.env.REACT_APP_NETWORK_ID);
 
+            const collectionAddresses = await getAllContracts();
+
             const response = await FetchStaticData.fetchZoraIndexerList(fetchAgent, {
-                collectionAddresses: ['0xfd94a94d0a831a7bba566ef7a660e950ad913787'],
+                collectionAddresses,
                 limit: 100,
                 offset: 0,
             });

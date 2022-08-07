@@ -202,6 +202,7 @@ const NewNFT = () => {
                 videoResponse.videoFileUrl,
                 imageURL
             );
+
         } catch (error) {
             console.log(error);
         }
