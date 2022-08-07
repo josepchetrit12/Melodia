@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 
 // Utils
 import { getShortFormatAddress } from '../../utils/address';
+import { Link } from 'react-router-dom';
 
 // Styled
 const Container = styled.div`
@@ -22,14 +23,13 @@ const Card = ({ token }) => {
 
     const tokenInfo = FetchStaticData.getIndexerServerTokenInfo(token);
 
-    console.log(token);
-    console.log(tokenInfo);
-
     const imageURL = image => (`${image.replace('ipfs://', 'https://zora.imgix.net/')}&auto=format&fit=crop&w=480&h=480`);
 
     return (
         <Container>
-            <img src={imageURL(tokenInfo.metadata?.image)} alt='Cover' width='100%' />
+            <Link to={`/nft/${token.nft.tokenData.id}`}>
+                <img src={imageURL(tokenInfo.metadata?.image)} alt='Cover' width='100%' />
+            </Link>
 
             <div style={{ padding: '1rem', fontSize: '1.4rem', lineHeight: '1.2', fontWeight: '500' }}>
                 <p>{token.nft.tokenData.tokenContract.name} <span>#{tokenInfo.tokenId}</span></p>
