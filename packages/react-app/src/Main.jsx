@@ -7,6 +7,7 @@ import LandingPage from './pages/LandingPage';
 import Marketplace from './pages/Marketplace';
 import NewNFT from './pages/NewNFT';
 import NFT from './pages/NFT';
+import Profile from './pages/Profile';
 
 const Main = () => {
     return (
@@ -15,6 +16,7 @@ const Main = () => {
             <Route exact path='/' element={<Marketplace />}></Route>
             <Route exact path='/new-nft' element={<NewNFT />}></Route>
             <Route exact path='/nft/:id' element={<NFT />}></Route>
+            <Route exact path='/profile/:id' element={<Profile />}></Route>
             <Route path='*' element={<Error404 />}></Route>
         </Routes>
     );
