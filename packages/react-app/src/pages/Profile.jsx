@@ -3,11 +3,15 @@ import { useParams } from 'react-router-dom';
 import { FetchStaticData, MediaFetchAgent  } from "@zoralabs/nft-hooks";
 import styled from '@emotion/styled';
 
+// Service
+import { getAllContracts } from '../services/trackingContracts';
+
 // Components
 import AddressContainer from '../components/ui/AddressContainer';
 import Layout from '../components/layouts/Layout';
 import TokenList from '../components/layouts/TokenList';
 
+// Styled
 const Devider = styled.div`
     border-bottom: .2rem solid var(--gray3);
     width: 100%;
@@ -36,9 +40,11 @@ const Profile = () => {
 
             const fetchAgent = new MediaFetchAgent(process.env.REACT_APP_NETWORK_ID);
 
+            const collectionAddresses = await getAllContracts();
+
             const response = await FetchStaticData.fetchUserOwnedNFTs(fetchAgent, {
-                userAddress: '0x65E482DADF693E1e579640F38A31cA7840c94D29',
-                collectionAddresses: ['0xfd94a94d0a831A7BBa566Ef7a660E950aD913787']
+                userAddress: id,
+                collectionAddresses
             });
 
             setTokens(response);

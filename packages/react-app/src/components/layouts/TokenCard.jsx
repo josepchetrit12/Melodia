@@ -23,7 +23,7 @@ const TokenCard = ({ token }) => {
 
     const tokenInfo = FetchStaticData.getIndexerServerTokenInfo(token);
 
-    const imageURL = image => (`${image.replace('ipfs://', 'https://zora.imgix.net/')}&auto=format&fit=crop&w=480&h=480`);
+    const imageURL = image => (image ? `${image.replace('ipfs://', 'https://zora.imgix.net/')}&auto=format&fit=crop&w=480&h=480` : '/no_image_available.png');
 
     return (
         <Container>
