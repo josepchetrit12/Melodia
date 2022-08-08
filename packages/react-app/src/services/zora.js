@@ -1,6 +1,6 @@
 import Contract from '@zoralabs/nft-drop-contracts/dist/artifacts/ZoraNFTCreatorV1.sol/ZoraNFTCreatorV1.json';
 import { ethers } from 'ethers';
-import { addNewContract } from './trackingContracts';
+import { addNewContract } from './trackingContracts.js';
 
 const ZoraProxy_ADDRESS_RINKEBY = '0x2d2acD205bd6d9D0B3E79990e093768375AD3a30';
 
