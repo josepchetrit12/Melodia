@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import Main from './Main.jsx';
 
 function App() {
