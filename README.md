@@ -1,5 +1,19 @@
 # Melodia
 
+![alt text](https://github.com/josepchetrit12/Melodia/blob/main/packages/react-app/public/Banner.svg?raw=true)
+
+## Overview
+
+Melodia is an NFT marketplace where any independent music composer can launch their albums as an NFT and users will be able to buy from the marketplace.
+
+| Contract |Address |
+| --- | --- |
+| MelodiaTracking | 0xa4273064da16E030B43e3f50b092950079cd80D7 |
+
+### Fleek Deployment 
+
+https://melodia.on.fleek.co/
+
 ## Installation
 
 
